@@ -43,7 +43,7 @@ import com.google.common.io.Closeables;
 
 public class ConvertUtils {
 
-	public static final String CSV_DELIMITER = ",";
+	public static final String CSV_DELIMITER = "|";
 
 	private static String readFile(String path) throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(path));
@@ -65,44 +65,34 @@ public class ConvertUtils {
 	}
 
 	public static String getSchema(File csvFile) throws IOException {
-		String fileName = csvFile.getName().substring(0,
-				csvFile.getName().length() - ".csv".length())
-				+ ".schema";
+		String fileName = csvFile.getName().substring(0, csvFile.getName().length() - ".csv".length()) + ".schema";
 		File schemaFile = new File(csvFile.getParentFile(), fileName);
 		return readFile(schemaFile.getAbsolutePath());
 	}
 
-	public static void convertCsvToParquet(File csvFile, File outputParquetFile)
+	public static void convertCsvToParquet(File csvFile, File outputParquetFile, final String delimiter)
 			throws IOException {
-		convertCsvToParquet(csvFile, outputParquetFile, false);
+		convertCsvToParquet(csvFile, outputParquetFile, delimiter, false);
 	}
 
-	public static void convertCsvToParquet(File csvFile,
-			File outputParquetFile, boolean enableDictionary)
-			throws IOException {
+	public static void convertCsvToParquet(File csvFile, File outputParquetFile, final String delimiter,
+			boolean enableDictionary) throws IOException {
 		String rawSchema = getSchema(csvFile);
-		System.out.println(rawSchema);
 		if (outputParquetFile.exists()) {
-			throw new IOException("Output file "
-					+ outputParquetFile.getAbsolutePath() + " already exists");
+			throw new IOException("Output file " + outputParquetFile.getAbsolutePath() + " already exists");
 		}
 
 		Path path = new Path(outputParquetFile.toURI());
 
-		System.out.println(rawSchema);
-		
 		MessageType schema = MessageTypeParser.parseMessageType(rawSchema);
-		CsvParquetWriter writer = new CsvParquetWriter(path, schema,
-				enableDictionary);
+		CsvParquetWriter writer = new CsvParquetWriter(path, schema, enableDictionary);
 
 		BufferedReader br = new BufferedReader(new FileReader(csvFile));
 		String line;
-		int lineNumber = 0;
 		try {
 			while ((line = br.readLine()) != null) {
-				String[] fields = line.split(Pattern.quote(CSV_DELIMITER));
+				String[] fields = line.split(Pattern.quote(delimiter));
 				writer.write(Arrays.asList(fields));
-				++lineNumber;
 			}
 
 			writer.close();
@@ -111,21 +101,18 @@ public class ConvertUtils {
 		}
 	}
 
-	public static void convertParquetToCSV(File parquetFile, File csvOutputFile)
-			throws IOException {
+	public static void convertParquetToCSV(File parquetFile, File csvOutputFile) throws IOException {
 		Path parquetFilePath = new Path(parquetFile.toURI());
 
 		Configuration configuration = new Configuration(true);
 
 		org.apache.parquet.hadoop.example.GroupReadSupport readSupport = new GroupReadSupport();
-		ParquetMetadata readFooter = ParquetFileReader.readFooter(
-				configuration, parquetFilePath);
+		ParquetMetadata readFooter = ParquetFileReader.readFooter(configuration, parquetFilePath);
 		MessageType schema = readFooter.getFileMetaData().getSchema();
 
 		readSupport.init(configuration, null, schema);
 		BufferedWriter w = new BufferedWriter(new FileWriter(csvOutputFile));
-		ParquetReader<Group> reader = new ParquetReader<Group>(parquetFilePath,
-				readSupport);
+		ParquetReader<Group> reader = new ParquetReader<Group>(parquetFilePath, readSupport);
 		try {
 			Group g = null;
 			while ((g = reader.read()) != null) {
@@ -137,8 +124,7 @@ public class ConvertUtils {
 		}
 	}
 
-	private static void writeGroup(BufferedWriter w, Group g, MessageType schema)
-			throws IOException {
+	private static void writeGroup(BufferedWriter w, Group g, MessageType schema) throws IOException {
 		for (int j = 0; j < schema.getFieldCount(); j++) {
 			if (j > 0) {
 				w.write(CSV_DELIMITER);
@@ -150,31 +136,26 @@ public class ConvertUtils {
 	}
 
 	@Deprecated
-	public static void convertParquetToCSVEx(File parquetFile,
-			File csvOutputFile) throws IOException {
+	public static void convertParquetToCSVEx(File parquetFile, File csvOutputFile) throws IOException {
 		Path parquetFilePath = new Path(parquetFile.toURI());
 
 		Configuration configuration = new Configuration(true);
 
 		// TODO Following can be changed by using ParquetReader instead of
 		// ParquetFileReader
-		ParquetMetadata readFooter = ParquetFileReader.readFooter(
-				configuration, parquetFilePath);
+		ParquetMetadata readFooter = ParquetFileReader.readFooter(configuration, parquetFilePath);
 		MessageType schema = readFooter.getFileMetaData().getSchema();
-		ParquetFileReader parquetFileReader = new ParquetFileReader(
-				configuration, parquetFilePath, readFooter.getBlocks(),
-				schema.getColumns());
+		ParquetFileReader parquetFileReader = new ParquetFileReader(configuration, parquetFilePath,
+				readFooter.getBlocks(), schema.getColumns());
 		BufferedWriter w = new BufferedWriter(new FileWriter(csvOutputFile));
 		PageReadStore pages = null;
 		try {
 			while (null != (pages = parquetFileReader.readNextRowGroup())) {
 				final long rows = pages.getRowCount();
 
-				final MessageColumnIO columnIO = new ColumnIOFactory()
-						.getColumnIO(schema);
-				final RecordReader<Group> recordReader = columnIO
-						.getRecordReader(pages,
-								new GroupRecordConverter(schema));
+				final MessageColumnIO columnIO = new ColumnIOFactory().getColumnIO(schema);
+				final RecordReader<Group> recordReader = columnIO.getRecordReader(pages,
+						new GroupRecordConverter(schema));
 				for (int i = 0; i < rows; i++) {
 					final Group g = recordReader.read();
 					writeGroup(w, g, schema);

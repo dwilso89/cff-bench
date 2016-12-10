@@ -1,1 +1,5 @@
-message root {optional binary C1;optional binary C2;optional int32 C3;}
+message TestRecord {
+optional binary C1;
+optional binary C2;
+optional int32 C3;
+}
