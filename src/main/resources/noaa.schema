@@ -1,0 +1,27 @@
+message reading {
+required int32 station;
+required int32 wban;
+required int32 year_moda;
+optional float temperature;
+optional int32 temperature_count;
+optional float dew_point;
+optional int32 dew_point_count;
+optional float sea_level_pressure;
+optional int32 sea_level_pressure_count;
+optional float station_pressure;
+optional int32 station_pressure_count;
+optional float visibility;
+optional int32 visibility_count;
+optional float wind_speed;
+optional int32 wind_speed_count;
+optional float sustained_wind_speed;
+optional float max_wind_gust;
+optional float max_temperature;
+optional binary max_temperature_flag (UTF8);
+optional float min_temperature;
+optional binary min_temperature_flag (UTF8);
+optional float precipitation_amount;
+optional binary precipitation_flag (UTF8);
+optional float snow_depth;
+optional int32 indicators;
+}
