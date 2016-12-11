@@ -17,7 +17,7 @@ public class ConvertToParquestTest {
 
 	@Test
 	public void testConvertWorks() throws IOException {
-		ConvertUtils.convertCsvToParquet(new File("src/test/resources/testFile.csv"), new File("tmp"), "|", true);
+		ConvertUtils.convertCsvToParquet(new File("src/test/resources/testFile.csv"), new File("src/test/resources/testFile.schema"), new File("tmp"), "|", true);
 
 		try (ParquetReader<SimpleRecord> reader = ParquetReader.builder(new SimpleReadSupport(), new Path("tmp"))
 				.build();) {

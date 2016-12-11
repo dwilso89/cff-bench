@@ -64,20 +64,18 @@ public class ConvertUtils {
 		return stringBuilder.toString();
 	}
 
-	public static String getSchema(File csvFile) throws IOException {
-		String fileName = csvFile.getName().substring(0, csvFile.getName().length() - ".csv".length()) + ".schema";
-		File schemaFile = new File(csvFile.getParentFile(), fileName);
+	public static String getSchema(File schemaFile) throws IOException {
 		return readFile(schemaFile.getAbsolutePath());
 	}
 
-	public static void convertCsvToParquet(File csvFile, File outputParquetFile, final String delimiter)
+	public static void convertCsvToParquet(File csvFile, File schemaFile, File outputParquetFile, final String delimiter)
 			throws IOException {
-		convertCsvToParquet(csvFile, outputParquetFile, delimiter, false);
+		convertCsvToParquet(csvFile, schemaFile, outputParquetFile, delimiter, false);
 	}
 
-	public static void convertCsvToParquet(File csvFile, File outputParquetFile, final String delimiter,
+	public static void convertCsvToParquet(File csvFile, File schemaFile, File outputParquetFile, final String delimiter,
 			boolean enableDictionary) throws IOException {
-		String rawSchema = getSchema(csvFile);
+		String rawSchema = getSchema(schemaFile);
 		if (outputParquetFile.exists()) {
 			throw new IOException("Output file " + outputParquetFile.getAbsolutePath() + " already exists");
 		}

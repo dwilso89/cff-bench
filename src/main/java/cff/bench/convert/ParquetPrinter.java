@@ -18,7 +18,7 @@ public class ParquetPrinter {
 		private String parquetFile;
 	}
 
-	private void printFlatParquet(String[] args) throws IllegalArgumentException, IOException {
+	private void printParquet(String[] args) throws IllegalArgumentException, IOException {
 		final Commands commands = new Commands();
 		new JCommander(commands, args);
 
@@ -33,7 +33,7 @@ public class ParquetPrinter {
 	}
 
 	public static void main(String[] args) throws Exception {
-		new ParquetPrinter().printFlatParquet(args);
+		new ParquetPrinter().printParquet(args);
 	}
 
 }

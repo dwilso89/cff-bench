@@ -38,5 +38,11 @@ Note: The archives could be directly transformed into a cff it will be easier to
 
 3. Convert to Parquet
 
+java -cp cff-bench-0.0.1.jar cff.bench.convert.ConvertCSVToParquet -csvFile 2000/gsod_2000.txt -schemaFile noaa.schema -delimiter ',' -parquetFile 2000/gsod_2000.parquet -dict
+
+Print Parquet File
+
+java -cp cff-bench-0.0.1.jar cff.bench.convert.ParquetPrinter -parquetFile p.out
+
 
 4. Convert to ORC
