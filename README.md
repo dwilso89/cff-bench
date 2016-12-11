@@ -15,10 +15,14 @@ This project is meant to offer a means to quickly benchmark Parquet and ORC with
 
 ### NOAA - 2008-2010
 
-1. Download the data from their ftp site. 
+Detailed information about the dataset can be found in ftp://ftp.ncdc.noaa.gov/pub/data/gsod/readme.txt
+
+1. Download the data from their ftp site.
+```
 ftp://ftp.ncdc.noaa.gov/pub/data/gsod/1998/gsod_1998.tar
 ftp://ftp.ncdc.noaa.gov/pub/data/gsod/1999/gsod_1999.tar
 ftp://ftp.ncdc.noaa.gov/pub/data/gsod/2000/gsod_2000.tar
+```
 
 2. Turn each archive into one uncompressed CSV per year
 
