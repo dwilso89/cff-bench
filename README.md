@@ -30,6 +30,7 @@ ftp://ftp.ncdc.noaa.gov/pub/data/gsod/2000/gsod_2000.tar
 tar -xf gsod_2000.tar -C 2000/
 gzip -d 2000/*
 cat 2000/*.op > 2000/gsod_2000.txt
+sed -i 's/[[:space:]]\{1,\}/,/g' 2000/gsod_2000.txt
 rm 2000/*.op
 ```
 

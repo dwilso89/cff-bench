@@ -21,13 +21,14 @@ public class ConvertToParquestTest {
 
 		try (ParquetReader<SimpleRecord> reader = ParquetReader.builder(new SimpleReadSupport(), new Path("tmp"))
 				.build();) {
+
 			final List<NameValue> value = reader.read().getValues();
 			assertEquals("C1", value.get(0).getName().toString());
 			assertEquals("C2", value.get(1).getName().toString());
 			assertEquals("C3", value.get(2).getName().toString());
 		}
+
 		new File("tmp").delete();
 	}
 
 }
-

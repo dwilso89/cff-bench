@@ -1,5 +1,5 @@
 message TestRecord {
-optional binary C1;
-optional binary C2;
+optional binary C1 (UTF8);
+optional binary C2 (UTF8);
 optional int32 C3;
 }
