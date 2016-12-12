@@ -39,14 +39,13 @@ public class ConvertCSVToORC {
 		final Commands commands = new Commands();
 		new JCommander(commands, args);
 
-		convertToORC(commands.csvFile, IOUtils.toString(new FileInputStream(new File(commands.schemaFile))),
-				commands.orcFile, commands.delimiter);
+		convertToORC(commands.csvFile, commands.schemaFile, commands.orcFile, commands.delimiter);
 	}
 
-	public void convertToORC(String in, String schemaString, String out, String delim)
+	public void convertToORC(String in, String schemaFile, String out, String delim)
 			throws FileNotFoundException, IOException {
 		final TypeDescription schema = TypeDescription
-				.fromString(IOUtils.toString(new FileInputStream(new File(schemaString))));
+				.fromString(IOUtils.toString(new FileInputStream(new File(schemaFile))));
 		final Writer writer = OrcFile.createWriter(new Path(out),
 				OrcFile.writerOptions(new Configuration()).setSchema(schema));
 		final VectorizedRowBatch batch = schema.createRowBatch();
@@ -65,6 +64,7 @@ public class ConvertCSVToORC {
 				if (batch.size == batch.getMaxSize()) {
 					writer.addRowBatch(batch);
 					batch.reset();
+					rowNum = 0;
 				}
 			}
 		}
@@ -107,8 +107,8 @@ public class ConvertCSVToORC {
 		}
 	}
 
-	public static void main(String[] args) {
-
+	public static void main(String[] args) throws Exception {
+		new ConvertCSVToORC().convertToORC(args);
 	}
 
 }
