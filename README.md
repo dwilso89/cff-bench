@@ -24,25 +24,28 @@ ftp://ftp.ncdc.noaa.gov/pub/data/gsod/1999/gsod_1999.tar
 ftp://ftp.ncdc.noaa.gov/pub/data/gsod/2000/gsod_2000.tar
 ```
 
-2. Turn each archive into one uncompressed CSV per year
+2. Turn each archive into one uncompressed CSV per year. The dataset is fixed width, so there is some manual cleanup and removal of headers required.
 
 ```
 tar -xf gsod_2000.tar -C 2000/
 gzip -d 2000/*
-cat 2000/*.op > 2000/gsod_2000.txt
-sed -i 's/[[:space:]]\{1,\}/,/g' 2000/gsod_2000.txt
-rm 2000/*.op
+cat 2000/*.op > 2000/tmp.txt
+sed 's/.\{108\}/&,/' 2000/tmp.txt | sed -e 's/.\{117\}/&,/' | sed -e 's/.\{125\}/&,/' | sed -e 's/[[:space:]]\{1,\}/,/g' | sed '/S.*T/d' > 2000/gsod_2000.txt
+rm 2000/tmp.txt 2000/*.op
 ```
 
-Note: The archives could be directly transformed into a cff it will be easier to deal with a one to one conversion
+Note: The archives could be directly transformed into a columnar file but it will be easier to deal with a one to one conversion
 
 3. Convert to Parquet
 
+Convert
+
 java -cp cff-bench-0.0.1.jar cff.bench.convert.ConvertCSVToParquet -csvFile 2000/gsod_2000.txt -schemaFile noaa.schema -delimiter ',' -parquetFile 2000/gsod_2000.parquet -dict
 
-Print Parquet File
+Print File
 
-java -cp cff-bench-0.0.1.jar cff.bench.convert.ParquetPrinter -parquetFile p.out
+java -cp cff-bench-0.0.1.jar cff.bench.convert.ParquetPrinter -parquetFile gsod_2000.parquet
 
 
 4. Convert to ORC
+
