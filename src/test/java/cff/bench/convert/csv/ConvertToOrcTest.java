@@ -9,6 +9,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hive.ql.exec.vector.BytesColumnVector;
 import org.apache.hadoop.hive.ql.exec.vector.ColumnVector;
+import org.apache.hadoop.hive.ql.exec.vector.DecimalColumnVector;
 import org.apache.hadoop.hive.ql.exec.vector.DoubleColumnVector;
 import org.apache.hadoop.hive.ql.exec.vector.LongColumnVector;
 import org.apache.hadoop.hive.ql.exec.vector.VectorizedRowBatch;
@@ -34,7 +35,7 @@ public class ConvertToOrcTest {
 
 		StringBuilder sb = new StringBuilder();
 		while (rows.nextBatch(batch)) {
-//			System.out.println("Batch size:" + batch.size);
+			// System.out.println("Batch size:" + batch.size);
 			for (int r = 0; r < batch.size; ++r) {
 				sb.setLength(0);
 				sb.append("Row: ");
@@ -42,9 +43,12 @@ public class ConvertToOrcTest {
 					ColumnVector cv = batch.cols[i];
 					switch (reader.getSchema().getChildren().get(i).getCategory()) {
 					case DECIMAL:
+						DecimalColumnVector decCV = (DecimalColumnVector) cv;
+						decCV.stringifyValue(sb, r);
+						break;
 					case DOUBLE:
 					case FLOAT:
-						DoubleColumnVector dcv = ((DoubleColumnVector) cv);
+						DoubleColumnVector dcv = (DoubleColumnVector) cv;
 						dcv.stringifyValue(sb, r);
 						break;
 					case LIST:
@@ -52,7 +56,7 @@ public class ConvertToOrcTest {
 					case INT:
 					case SHORT:
 					case LONG:
-						LongColumnVector lcv = ((LongColumnVector) cv);
+						LongColumnVector lcv = (LongColumnVector) cv;
 						lcv.stringifyValue(sb, r);
 						break;
 					case MAP:
@@ -60,7 +64,7 @@ public class ConvertToOrcTest {
 					case STRING:
 					case BINARY:
 					case CHAR:
-						BytesColumnVector bcv = ((BytesColumnVector) cv);
+						BytesColumnVector bcv = (BytesColumnVector) cv;
 						sb.append(bcv.toString(r));
 						break;
 					case BOOLEAN:
@@ -74,11 +78,11 @@ public class ConvertToOrcTest {
 						throw new UnsupportedOperationException(
 								"Does not support: " + reader.getSchema().getChildren().get(i).getCategory());
 					}
-
 					sb.append(" ");
 				}
-//				System.out.println(sb.toString());
-
+				if (r == 1) {
+					assertEquals("Row: B Y 2 ", sb.toString());
+				}
 			}
 			rowTotal = batch.size;
 		}
