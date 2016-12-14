@@ -2,17 +2,17 @@ package cff.bench.mr;
 
 import java.io.IOException;
 
-import org.apache.avro.generic.GenericRecord;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.orc.mapred.OrcStruct;
 
-public class CountRowsMapper extends Mapper<Void, GenericRecord, NullWritable, LongWritable> {
+public class CountORCMapper extends Mapper<NullWritable, OrcStruct, NullWritable, LongWritable> {
 
 	Long rows = 0L;
 
 	@Override
-	public void map(Void key, GenericRecord value, Context context) {
+	public void map(NullWritable key, OrcStruct value, Context context) {
 		rows++;
 	}
 

@@ -3,7 +3,6 @@ package cff.bench.mr;
 import java.io.File;
 import java.io.FileInputStream;
 
-import org.apache.avro.Schema;
 import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
@@ -14,25 +13,25 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
-import org.apache.parquet.avro.AvroParquetInputFormat;
-import org.apache.parquet.avro.AvroReadSupport;
-import org.apache.parquet.avro.AvroSchemaConverter;
-import org.apache.parquet.schema.MessageTypeParser;
+import org.apache.orc.OrcConf;
+import org.apache.orc.mapreduce.OrcInputFormat;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 
-public class ReadParquet extends Configured implements Tool {
+public class ReadORC extends Configured implements Tool {
 
 	public class Commands {
 		@Parameter(names = { "-in" }, description = "Input file or directory")
 		private String in;
 		@Parameter(names = { "-schema" }, description = "Read projection schema")
 		private String schema;
-		@Parameter(names = { "-schemaFile" }, description = "Read projection schema file")
+		@Parameter(names = { "-schemaFile" }, description = "Read projection schema")
 		private String schemaFile;
 		@Parameter(names = { "-out" }, description = "Output directory")
 		private String out;
+		@Parameter(names = { "-columns" }, description = "Columns to read. Ex. '1,2,3' for columns 1, 2, and 3")
+		private String cols;
 	}
 
 	public int run(String[] args) throws Exception {
@@ -46,21 +45,20 @@ public class ReadParquet extends Configured implements Tool {
 			schemaString = commands.schema;
 		}
 
-		final Schema avroProjectedSchema = new AvroSchemaConverter()
-				.convert(MessageTypeParser.parseMessageType(schemaString));
+		OrcConf.MAPRED_OUTPUT_SCHEMA.setString(getConf(), schemaString);
+		getConf().setInt(OrcConf.ROW_INDEX_STRIDE.getAttribute(), 1000);
+		getConf().set(OrcConf.INCLUDE_COLUMNS.getAttribute(), commands.cols);
 
 		Job job = Job.getInstance(getConf());
-		job.setJobName("cff-read-parquet");
-		job.setJarByClass(ReadParquet.class);
-
-		AvroReadSupport.setRequestedProjection(getConf(), avroProjectedSchema);
+		job.setJobName("cff-read-orc");
+		job.setJarByClass(ReadORC.class);
 
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(Text.class);
 
-		job.setMapperClass(CountRowsParquetMapper.class);
+		job.setMapperClass(CountORCMapper.class);
 
-		job.setInputFormatClass(AvroParquetInputFormat.class);
+		job.setInputFormatClass(OrcInputFormat.class);
 		job.setOutputFormatClass(TextOutputFormat.class);
 
 		job.setNumReduceTasks(0);
@@ -73,13 +71,11 @@ public class ReadParquet extends Configured implements Tool {
 		FileInputFormat.addInputPath(job, inputFilePath);
 		FileOutputFormat.setOutputPath(job, outputFilePath);
 
-		// AvroParquetInputFormat.setReadSupportClass(conf, readSupportClass);
-		// ParquetInputFormat.setReadSupportClass(job, AvroReadSupport.class);
 		return job.waitForCompletion(true) ? 0 : 1;
 	}
 
 	public static void main(String[] args) throws Exception {
-		int res = ToolRunner.run(new ReadParquet(), args);
+		int res = ToolRunner.run(new ReadORC(), args);
 		System.exit(res);
 	}
 }

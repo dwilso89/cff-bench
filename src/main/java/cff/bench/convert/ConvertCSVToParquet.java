@@ -19,8 +19,6 @@ public class ConvertCSVToParquet {
 		private String schemaFile;
 		@Parameter(names = { "-parquetFile" }, description = "Output file")
 		private String parquetFile;
-		@Parameter(names = { "-dict" }, description = "enable dictionary", required = true)
-		private boolean enableDictionary = false;
 	}
 
 	public void convert(String[] args) throws IOException {
@@ -28,7 +26,7 @@ public class ConvertCSVToParquet {
 		new JCommander(commands, args);
 
 		ConvertUtils.convertCsvToParquet(new File(commands.csvFile), new File(commands.schemaFile),
-				new File(commands.parquetFile), commands.delimiter, commands.enableDictionary);
+				new File(commands.parquetFile), commands.delimiter, true);
 	}
 
 	public static void main(String[] args) throws Exception {
