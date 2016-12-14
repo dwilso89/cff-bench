@@ -41,7 +41,7 @@ java -cp cff-bench-0.0.1.jar cff.bench.convert.ParquetPrinter -parquetFile gsod_
 ### 4 - Convert to ORC
 
 ```
-java -cp cff-bench-0.0.1.jar cff.bench.convert.ConvertCSVToORC -csvFile 2000/gsod_2000.txt -schemaFile noaa_orc.schema -delimiter ',' -orcFile 2000/gsod_2000.orc -dict
+java -cp cff-bench-0.0.1.jar cff.bench.convert.ConvertCSVToORC -csvFile 2000/gsod_2000.txt -schemaFile noaa_orc.schema -delimiter ',' -orcFile 2000/gsod_2000.orc
 ```
 
 Print File
