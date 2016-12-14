@@ -49,3 +49,25 @@ Print File
 ```
 java -cp cff-bench-0.0.1.jar cff.bench.convert.ORCPrinter -orcFile gsod_2000.orc
 ```
+
+### 5 - Run MapReduce over Parquet
+
+Run multiple jobs with various schema projections by specifying a projected schema
+
+Example run:
+```
+hadoop jar cff-bench-0.0.1.jar cff.bench.mr.ReadParquet -in /in/parquet/2000/gsod_2000.parquet -out parquetFourColumns -schemaFile noaa_4cols_parquet.schema
+```
+
+### 6 - Run MapReduce over ORC
+
+Example run:
+```
+hadoop jar cff-bench-0.0.1.jar cff.bench.mr.ReadORC -in /in/parquet/2000/gsod_2000.orc -out orcFourColumns -schemaFile noaa_4cols_orc.schema
+```
+
+#### Parquet Results:
+![Alt text](/img/parquetResults.png?raw=true "Parquet Results Chart")
+
+#### ORC Results:
+![Alt text](/img/orcResults.png?raw=true "ORC Results Chart")
