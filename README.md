@@ -10,3 +10,32 @@ Columnar file formats (cff) have become very popular in the big data realm. Thes
 
 ## Purpose
 This project is meant to offer a means to benchmark Parquet and ORC with an arbitrary dataset, schema, and indexing mechanisms without requiring Hive, Impala, Drill, etc. It comes with an example using NOAA weather collection from 1998-2000. See nooa_example.md
+
+## Features
+
+### Print CFF Serialized Data
+
+```
+#Parquet
+java -cp cff-bench-0.0.1.jar cff.bench.convert.ParquetPrinter -parquetFile ${YOUR_FILE}
+
+#ORC
+java -cp cff-bench-0.0.1.jar cff.bench.convert.ORCPrinter -orcFile ${YOUR_FILE}
+```
+
+### Convert Data to a CFF
+
+```
+#Parquet
+java -cp cff-bench-0.0.1.jar cff.bench.convert.ConvertCSVToParquet -csvFile ${YOUR_FILE} -schemaFile ${YOUR_PARQUET_SCHEMA} -delimiter ${DELIMITER) -parquetFile ${OUTPUT_FILE}
+
+#ORC
+java -cp cff-bench-0.0.1.jar cff.bench.convert.ConvertORCToParquet -csvFile ${YOUR_FILE} -schemaFile ${YOUR_ORC_SCHEMA} -delimiter ${DELIMITER) -parquetFile ${OUTPUT_FILE}
+```
+
+### Read Specific Columns from CFF (MapReduce)
+
+```
+#Parquet
+hadoop jar cff-bench-0.0.1.jar cff.bench.mr.ReadParquet -in ${INPUT_FILE_OR_DIR} -out ${OUTPUT_DIR} -schemaFile ${PROJECTED_PARQUET_SCHEMA}
+```
