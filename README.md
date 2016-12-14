@@ -9,7 +9,7 @@ Columnar file formats (cff) have become very popular in the big data realm. Thes
 * [3] - http://research.google.com/pubs/pub36632.html
 
 ## Purpose
-This project is meant to offer a means to benchmark Parquet and ORC with an arbitrary dataset, schema, and indexing mechanisms without requiring Hive, Impala, Drill, etc. It comes with an example using NOAA weather collection from 1998-2000. See nooa_example.md
+This project is meant to offer a means to benchmark Parquet and ORC with an arbitrary dataset, schema, and indexing mechanisms without requiring Hive, Impala, Drill, etc. It comes with an example using NOAA weather collection from 1998-2000. See [noaa_example.md](noaa_example.md)
 
 ## Features
 
