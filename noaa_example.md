@@ -70,4 +70,4 @@ hadoop jar cff-bench-0.0.1.jar cff.bench.mr.ReadORC -in /in/parquet/2000/gsod_20
 ![Alt text](/img/parquetResults.png?raw=true "Parquet Results Chart")
 
 #### ORC Results:
-![Alt text](/img/orcResults.png?raw=true "ORC Results Chart")
+![Alt text](/img/orcResults.PNG?raw=true "ORC Results Chart")
