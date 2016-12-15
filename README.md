@@ -2,7 +2,7 @@
 Creating and Benchmarking Columnar File Formats
 
 ## Background
-Columnar file formats (cff) have become very popular in the big data realm. These technologies offer efficient serialization, indexing, and data retreival. Each of thse projects were born out of the necessity to process extremely large volumes of data, very quickly. The two most prominent examples of these in open source are Apachhe Parquet [1] and Apache ORC [2]. Each has influences from other works, but most importantly from Google's Dremel paper [3].
+Columnar file formats (cff) have become very popular in the big data realm. These technologies offer efficient serialization, indexing, and data retreival. Each of thse projects were born out of the necessity to process extremely large volumes of data, very quickly. The two most prominent examples of these in open source are Apache Parquet [1] and Apache ORC [2]. Each has influences from other works, but most importantly from Google's Dremel paper [3].
 
 * [1] - https://parquet.apache.org/
 * [2] - https://orc.apache.org/
