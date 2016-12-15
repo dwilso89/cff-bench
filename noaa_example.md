@@ -66,8 +66,11 @@ Example run:
 hadoop jar cff-bench-0.0.1.jar cff.bench.mr.ReadORC -in /in/parquet/2000/gsod_2000.orc -out orcFourColumns -schemaFile noaa_4cols_orc.schema
 ```
 
-#### Parquet Results:
-![Alt text](/img/parquetResults.png?raw=true "Parquet Results Chart")
+### 7 - Gather Results and Report
 
-#### ORC Results:
-![Alt text](/img/orcResults.PNG?raw=true "ORC Results Chart")
+<p>
+Work is still underway for automatic gathering and reporting. 
+</p>
+<p>
+See how I manually collected results and report at [NOAA Results](noaa_results.md)
+</p>
