@@ -71,6 +71,4 @@ hadoop jar cff-bench-0.0.1.jar cff.bench.mr.ReadORC -in /in/parquet/2000/gsod_20
 <p>
 Work is still underway for automatic gathering and reporting. 
 </p>
-<p>
 See how I manually collected results and report at [NOAA Results](noaa_results.md)
-</p>
