@@ -38,4 +38,7 @@ java -cp cff-bench-0.0.1.jar cff.bench.convert.ConvertORCToParquet -csvFile ${YO
 ```
 #Parquet
 hadoop jar cff-bench-0.0.1.jar cff.bench.mr.ReadParquet -in ${INPUT_FILE_OR_DIR} -out ${OUTPUT_DIR} -schemaFile ${PROJECTED_PARQUET_SCHEMA}
+
+#ORC
+hadoop jar cff-bench-0.0.1.jar cff.bench.mr.ReadORC -in ${INPUT_FILE_OR_DIR} -out ${OUTPUT_DIR} -schemaFile ${INPUT_SCHEMA} -columns ${COMMA_SEPARATED_LIST_OF_COLUMN_INDEXES}
 ```
