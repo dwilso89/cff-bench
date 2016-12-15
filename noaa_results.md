@@ -14,7 +14,7 @@ After following the instructions in [here](noaa_example.md), you can gather the 
 
 ##### Software
 <ul>
-<li>Hadoop 2.7.2 in pseudo-distributed mode. [Setup docs](https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/SingleCluster.html#YARN_on_a_Single_Node)</li>
+<li>Hadoop 2.7.2 in pseudo-distributed mode</li> 
 <li>Centos 6.5</li>
 </ul>
 
