@@ -1,0 +1,6 @@
+message reading {
+required int32 station;
+required int32 wban;
+required int32 year_moda;
+optional float temperature;
+}
